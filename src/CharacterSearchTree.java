@@ -187,7 +187,92 @@ public class CharacterSearchTree
     }
 
     public boolean containsCharacter( char t ){
+        if ( !isEmpty() ){
+            if( content.getToken() > t ){
+                return leftChild.containsCharacter( t );
+            }
+            else if ( content.getToken() < t ){
+                return rightChild.containsCharacter( t );
+            }
+            else {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public boolean equalStructure( CharacterSearchTree cst ){
+        if ( isEmpty() )
+        {
+            return cst.isEmpty();
+        } else if ( cst.isEmpty() )
+        {
+            return false;
+        } else {
+            return leftChild.equalStructure( cst.leftChild ) && rightChild.equalStructure( cst.rightChild );
+        }
+    }
+
+    public CharacterSearchTree rotateNodeToRight()
+    {
+        CharacterSearchTree newRoot = this;
+        if ( !isEmpty() && !leftChild.isEmpty() )
+        {
+            newRoot = leftChild;
+            leftChild = newRoot.rightChild;
+            newRoot.rightChild = this;
+        }
+        return newRoot;
+    }
+
+    public boolean samePath( char t1, char t2 )
+    {
+        boolean foundT1 = false;
+        boolean foundT2 = false;
+        CharacterSearchTree current = this;                                                ;
+
+        while ( !current.isEmpty() )
+        {
+            if ( ! foundT1 )
+            {
+                if ( current.getContent().getToken() == t1 )
+                {
+                    foundT1 = true;
+                }
+                else
+                {
+                    if ( current.getContent().getToken() == t2 )
+                    {
+                        foundT2 = true;
+                    }
+                    if ( current.getContent().getToken() > t1 )
+                    {
+                        current = current.leftChild;
+                    }
+                    else
+                    {
+                        current = current.rightChild;
+                    }
+                }
+            }
+            else
+            {
+                if ( foundT2 || current.getContent().getToken() == t2 )
+                {
+                    return true;
+                }
+                if ( current.getContent().getToken() > t2 )
+                {
+                    current = current.leftChild;
+                }
+                else
+                {
+                    current = current.rightChild;
+                }
+            }
+        }
+
+        return false;
     }
 }
 
